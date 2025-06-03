@@ -5,6 +5,14 @@ import { Head, useForm, router } from '@inertiajs/vue3';
 import { ref, computed, watch } from 'vue';
 import Pagination from '@/components/Pagination.vue';
 
+function logout() {
+    router.post('/logout', {}, {
+        onSuccess: () => {
+            router.visit('/');
+        }
+    });
+}
+
 const props = defineProps(['siswa', 'industris', 'pkl', 'gurus', 'allIndustris']);
 const search = ref('');
 const showModal = ref(false);
@@ -151,7 +159,7 @@ function deletePkl(id) {
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-                <!-- Profile Card -->
+                <!-- Profile Card Kiri -->
                 <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                     <h2 class="text-xl font-bold mb-4">Profile Siswa</h2>
                     <div class="space-y-2">
@@ -159,14 +167,6 @@ function deletePkl(id) {
                         <p><strong>NIS:</strong> {{ siswa.nis }}</p>
                         <p><strong>Email:</strong> {{ siswa.email }}</p>
                         <p><strong>Gender:</strong> {{ siswa.gender }}</p>
-                        <p><strong>Alamat:</strong> {{ siswa.alamat }}</p>
-                        <p><strong>Kontak:</strong> {{ siswa.kontak }}</p>
-                        <p>
-                            <strong>Status PKL:</strong>
-                            <span :class="siswa.status_pkl ? 'text-green-500' : 'text-red-500'">
-                                {{ siswa.status_pkl ? 'Sudah Mendapat PKL' : 'Belum Mendapat PKL' }}
-                            </span>
-                        </p>
                     </div>
                 </div>
 
@@ -183,6 +183,28 @@ function deletePkl(id) {
                             class="w-full border border-gray-500 px-4 py-2 rounded hover:bg-gray-500 hover:text-white transition-colors">
                             Tambah Data PKL
                         </button>
+                    </div>
+                </div>
+
+                <!-- Profile Card Kanan -->
+                <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+                    <h2 class="text-xl font-bold mb-4">Info Tambahan</h2>
+                    <div class="space-y-2">
+                        <p><strong>Alamat:</strong> {{ siswa.alamat }}</p>
+                        <p><strong>Kontak:</strong> {{ siswa.kontak }}</p>
+                        <p>
+                            <strong>Status PKL:</strong>
+                            <span :class="siswa.status_pkl ? 'text-green-500' : 'text-red-500'">
+                                {{ siswa.status_pkl ? 'Sudah Mendapat PKL' : 'Belum Mendapat PKL' }}
+                            </span>
+                        </p>
+                        <div class="pt-4 border-t border-sidebar-border/70 mt-4">
+                            <button 
+                                @click="logout" 
+                                class="w-full border border-red-500 text-red-500 px-4 py-2 rounded hover:bg-red-500 hover:text-white transition-colors">
+                                Logout
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -237,7 +259,12 @@ function deletePkl(id) {
                     </div>
                     <!-- Pagination for PKL table -->
                     <div v-if="pkl.links" class="mt-4 pkl-pagination">
-                        <Pagination :links="pkl.links" />
+                        <Pagination 
+                            :links="pkl.links" 
+                            :preserve-state="true"
+                            :preserve-scroll="true"
+                            :only="['pkl']"
+                        />
                     </div>
                 </div>
 
@@ -284,7 +311,12 @@ function deletePkl(id) {
                         </table>
                     </div>
                     <div v-if="industris.links" class="mt-4 industri-pagination">
-                        <Pagination :links="industris.links" />
+                        <Pagination 
+                            :links="industris.links"
+                            :preserve-state="true"
+                            :preserve-scroll="true"
+                            :only="['industris']"
+                        />
                     </div>
                 </div>
             </div>
@@ -339,7 +371,7 @@ function deletePkl(id) {
                             <label class="block mb-1">Pilih Industri</label>
                             <select v-model="pklForm.industri_id" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-transparent">
                                 <option value="">Pilih Industri</option>
-                                <option v-for="industri in industris.data" :key="industri.id" :value="industri.id">
+                                <option v-for="industri in props.allIndustris" :key="industri.id" :value="industri.id">
                                     {{ industri.nama }}
                                 </option>
                             </select>
@@ -384,7 +416,7 @@ function deletePkl(id) {
                             <label class="block mb-1">Pilih Industri</label>
                             <select v-model="editPklForm.industri_id" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-transparent">
                                 <option value="">Pilih Industri</option>
-                                <option v-for="industri in allIndustris" :key="industri.id" :value="industri.id">
+                                <option v-for="industri in props.allIndustris" :key="industri.id" :value="industri.id">
                                     {{ industri.nama }}
                                 </option>
                             </select>
