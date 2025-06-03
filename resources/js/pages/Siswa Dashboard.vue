@@ -4,14 +4,17 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, useForm, router } from '@inertiajs/vue3';
 import { ref, computed, watch } from 'vue';
 import Pagination from '@/components/Pagination.vue';
+import { Link } from '@inertiajs/vue3';
+
 
 function logout() {
-    router.post('/logout', {}, {
+    router.post(route('siswa.logout'), {}, {
         onSuccess: () => {
             router.visit('/');
         }
     });
 }
+
 
 const props = defineProps(['siswa', 'industris', 'pkl', 'gurus', 'allIndustris']);
 const search = ref('');
@@ -21,8 +24,12 @@ const showEditPklModal = ref(false);
 const currentPkl = ref(null);
 const editMode = ref(false);
 const currentIndustri = ref(null);
+const searchIndustri = ref('');
+const searchPkl = ref('');
 
-watch(search, (value) => {
+
+
+watch(searchIndustri, (value) => {
     router.get(
         '/siswa/dashboard',
         { search: value, remember: true },
@@ -30,6 +37,18 @@ watch(search, (value) => {
             preserveState: true,
             preserveScroll: true,
             only: ['industris']
+        }
+    );
+});
+
+watch(searchPkl, (value) => {
+    router.get(
+        '/siswa/dashboard',
+        { search: value, remember: true },
+        { 
+            preserveState: true,
+            preserveScroll: true,
+            only: ['pkl']
         }
     );
 });
@@ -136,6 +155,8 @@ function deletePkl(id) {
         });
     }
 }
+
+
 </script>
 
 <style scoped>
@@ -156,6 +177,7 @@ function deletePkl(id) {
 <template>
     <Head title="Dashboard" />
 
+
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <div class="grid auto-rows-min gap-4 md:grid-cols-3">
@@ -165,13 +187,14 @@ function deletePkl(id) {
                     <div class="flex flex-col items-center mb-4">
                         <div class="w-32 h-32 rounded-full overflow-hidden mb-3 border-2 border-sidebar-border/70">
                             <img 
-                                :src="siswa.gambar ? `public/images/siswa/${siswa.gambar}` : '/images/default-avatar.png'"
+                                :src="siswa.gambar ? `/images/siswa/${siswa.gambar}` : '/images/default-avatar.png'"
                                 :alt="siswa.nama"
                                 class="w-full h-full object-cover"
                             >
                         </div>
                     </div>
                     <div class="space-y-2">
+                      
                         <p><strong>Nama:</strong> {{ siswa.nama }}</p>
                         <p><strong>NIS:</strong> {{ siswa.nis }}</p>
                         <p><strong>Email:</strong> {{ siswa.email }}</p>
@@ -224,6 +247,15 @@ function deletePkl(id) {
                 <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border flex flex-col">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-bold">Data PKL</h2>
+                          <div class="flex space-x-2 items-center">
+                           <input 
+  type="text" 
+  v-model="searchPkl" 
+  placeholder="Cari PKL..." 
+  class="px-4 py-2 border rounded bg-transparent"
+/>
+
+                        </div>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full border-collapse border border-sidebar-border/70">
@@ -267,9 +299,9 @@ function deletePkl(id) {
                         </table>
                     </div>
                     <!-- Pagination for PKL table -->
-                    <div v-if="pkl.links" class="mt-4 pkl-pagination">
+                     <div v-if="pkl.links" class="mt-4 industri-pagination">
                         <Pagination 
-                            :links="pkl.links" 
+                            :links="pkl.links"
                             :preserve-state="true"
                             :preserve-scroll="true"
                             :only="['pkl']"
@@ -282,12 +314,13 @@ function deletePkl(id) {
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-bold">Data Industri</h2>
                         <div class="flex space-x-2 items-center">
-                            <input 
-                                type="text" 
-                                v-model="search" 
-                                placeholder="Cari industri..." 
-                                class="px-4 py-2 border rounded bg-transparent"
-                            >
+                           <input 
+  type="text" 
+  v-model="searchIndustri" 
+  placeholder="Cari industri..." 
+  class="px-4 py-2 border rounded bg-transparent"
+/>
+
                         </div>
                     </div>
                     <div class="overflow-x-auto">

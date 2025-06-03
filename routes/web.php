@@ -62,6 +62,12 @@ Route::middleware('auth:siswa')->group(function () {
         ->name('siswa.logout');
 });
 
+Route::middleware('auth:guru')->group(function () {
+    Route::post('/guru/logout', [GuruAuth::class, 'destroy'])
+        ->name('guru.logout');
+});
+
+
 
 
 require __DIR__.'/settings.php';

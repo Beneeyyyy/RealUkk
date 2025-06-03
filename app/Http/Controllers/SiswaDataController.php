@@ -18,13 +18,18 @@ class SiswaDataController extends Controller
         $allIndustris = Industri::orderBy('nama')->get();
 
         // Get PKL data with relationships and pagination
-        $pkl = Pkl::with(['industri', 'guru', 'siswa'])
-            ->orderByRaw("CASE WHEN siswa_id = ? THEN 1 ELSE 0 END DESC", [$siswa->id])
-            ->paginate(5, ['*'], 'pkl_page');  // Use separate page parameter
+       $pkl = Pkl::with(['industri', 'guru', 'siswa'])
+    ->when($request->searchPkl, function ($query, $search) {
+        $query->whereHas('siswa', fn($q) => $q->where('nama', 'like', "%{$search}%"))
+              ->orWhereHas('guru', fn($q) => $q->where('name', 'like', "%{$search}%"))
+              ->orWhereHas('industri', fn($q) => $q->where('nama', 'like', "%{$search}%"));
+    })
+    ->orderByRaw("CASE WHEN siswa_id = ? THEN 1 ELSE 0 END DESC", [$siswa->id])
+    ->paginate(5, ['*'], 'pkl_page');
 
         // Get Industri data with search filter
         $industris = Industri::query()
-            ->when($request->search, function($query, $search) {
+            ->when($request->searchIndustris, function($query, $search) {
                 $query->where(function($q) use ($search) {
                     $q->where('nama', 'like', "%{$search}%")
                       ->orWhere('bidang_usaha', 'like', "%{$search}%");
