@@ -1,28 +1,21 @@
 <script setup lang="ts">
-
+import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm, router } from '@inertiajs/vue3';
-import { ref, computed, watch } from 'vue';
+import { ref, computed } from 'vue';
 import Pagination from '@/components/Pagination.vue';
 
 const props = defineProps(['siswa', 'industris', 'pkl', 'gurus']);
 const search = ref('');
 const showModal = ref(false);
 const showPklModal = ref(false);
-const showEditPklModal = ref(false);
-const currentPkl = ref(null);
 const editMode = ref(false);
 const currentIndustri = ref(null);
 
-watch(search, (value) => {
-    router.get(
-        '/siswa/dashboard',
-        { search: value, remember: true },
-        { 
-            preserveState: true,
-            preserveScroll: true,
-            only: ['industris']
-        }
+const industrisFiltered = computed(() => {
+    return props.industris.data.filter(industri => 
+        industri.nama.toLowerCase().includes(search.value.toLowerCase()) ||
+        industri.bidang_usaha.toLowerCase().includes(search.value.toLowerCase())
     );
 });
 
@@ -40,25 +33,6 @@ const pklForm = useForm({
     mulai: '',
     selesai: ''
 });
-
-function openEditPklModal(pkl) {
-    currentPkl.value = pkl;
-    editPklForm.industri_id = pkl.industri_id;
-    editPklForm.guru_id = pkl.guru_id;
-    editPklForm.mulai = pkl.mulai;
-    editPklForm.selesai = pkl.selesai;
-    showEditPklModal.value = true;
-}
-
-function submitEditPkl() {
-    editPklForm.put(`/pkl/${currentPkl.value.id}`, {
-        preserveScroll: true,
-        onSuccess: () => {
-            showEditPklModal.value = false;
-            editPklForm.reset();
-        }
-    });
-}
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -84,29 +58,31 @@ function openModal(industri = null) {
 }
 
 function submitIndustri() {
-    const url = editMode.value ? `/industri/${currentIndustri.value.id}` : '/industri';
-    const method = editMode.value ? form.put : form.post;
-
-    method(url, {
-        preserveScroll: true,
-        onSuccess: () => {
-            showModal.value = false;
-            form.reset();
-        }
-    });
+    if (editMode.value) {
+        form.put(`/industri/${currentIndustri.value.id}`, {
+            onSuccess: () => {
+                showModal.value = false;
+                form.reset();
+            }
+        });
+    } else {
+        form.post('/industri', {
+            onSuccess: () => {
+                showModal.value = false;
+                form.reset();
+            }
+        });
+    }
 }
 
 function deleteIndustri(id) {
     if (confirm('Are you sure you want to delete this industry?')) {
-        router.delete(`/industri/${id}`, {
-            preserveScroll: true
-        });
+        router.delete(`/industri/${id}`);
     }
 }
 
 function submitPkl() {
     pklForm.post('/pkl', {
-        preserveScroll: true,
         onSuccess: () => {
             showPklModal.value = false;
             pklForm.reset();
@@ -116,27 +92,10 @@ function submitPkl() {
 
 function deletePkl(id) {
     if (confirm('Apakah Anda yakin ingin menghapus data PKL ini?')) {
-        router.delete(`/pkl/${id}`, {
-            preserveScroll: true
-        });
+        router.delete(`/pkl/${id}`);
     }
 }
 </script>
-
-<style scoped>
-.pkl-pagination :deep(.pagination-nav) {
-    justify-content: flex-start;
-}
-
-.industri-pagination :deep(.pagination-nav) {
-    justify-content: flex-start;
-}
-
-.pkl-pagination, .industri-pagination {
-    width: 100%;
-    overflow-x: auto;
-}
-</style>
 
 <template>
     <Head title="Dashboard" />
@@ -181,9 +140,9 @@ function deletePkl(id) {
             </div>
 
             <!-- Data Tables Section -->
-            <div class="grid md:grid-cols-2 grid-cols-1 gap-4">
+            <div class="grid grid-cols-2 gap-4">
                 <!-- PKL Table -->
-                <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border flex flex-col">
+                <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-bold">Data PKL</h2>
                     </div>
@@ -200,7 +159,7 @@ function deletePkl(id) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="p in pkl.data" :key="p.id" 
+                                <tr v-for="p in pkl" :key="p.id" 
                                     :class="{
                                         'border-b border-sidebar-border/70': true,
                                         'bg-gray-900/5': p.siswa_id === siswa.id
@@ -211,31 +170,20 @@ function deletePkl(id) {
                                     <td class="px-6 py-4">{{ new Date(p.mulai).toLocaleDateString() }}</td>
                                     <td class="px-6 py-4">{{ new Date(p.selesai).toLocaleDateString() }}</td>
                                     <td class="px-6 py-4">
-                                        <div v-if="p.siswa_id === siswa.id" class="flex space-x-2">
-                                            <button 
-                                                @click="openEditPklModal(p)"
-                                                class="border border-gray-500 px-2 py-1 rounded hover:bg-gray-500 hover:text-white transition-colors">
-                                                Edit
-                                            </button>
-                                            <button 
-                                                @click="deletePkl(p.id)" 
-                                                class="border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white transition-colors">
-                                                Hapus
-                                            </button>
-                                        </div>
+                                        <button v-if="p.siswa_id === siswa.id"
+                                            @click="deletePkl(p.id)" 
+                                            class="border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white transition-colors">
+                                            Hapus
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <!-- Pagination for PKL table -->
-                    <div v-if="pkl.links" class="mt-4 pkl-pagination">
-                        <Pagination :links="pkl.links" />
-                    </div>
                 </div>
 
                 <!-- Industri Table -->
-                <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border flex flex-col">
+                <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-bold">Data Industri</h2>
                         <div class="flex space-x-2 items-center">
@@ -259,7 +207,7 @@ function deletePkl(id) {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="industri in industris.data" :key="industri.id" class="border-b border-sidebar-border/70">
+                                <tr v-for="industri in industrisFiltered" :key="industri.id" class="border-b border-sidebar-border/70">
                                     <td class="px-6 py-4">{{ industri.nama }}</td>
                                     <td class="px-6 py-4">{{ industri.bidang_usaha }}</td>
                                     <td class="px-6 py-4">{{ industri.alamat }}</td>
@@ -276,7 +224,7 @@ function deletePkl(id) {
                             </tbody>
                         </table>
                     </div>
-                    <div v-if="industris.links" class="mt-4 industri-pagination">
+                    <div v-if="industris.links" class="mt-4">
                         <Pagination :links="industris.links" />
                     </div>
                 </div>
@@ -332,7 +280,7 @@ function deletePkl(id) {
                             <label class="block mb-1">Pilih Industri</label>
                             <select v-model="pklForm.industri_id" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-transparent">
                                 <option value="">Pilih Industri</option>
-                                <option v-for="industri in industris.data" :key="industri.id" :value="industri.id">
+                                <option v-for="industri in industrisFiltered" :key="industri.id" :value="industri.id">
                                     {{ industri.nama }}
                                 </option>
                             </select>
@@ -361,51 +309,6 @@ function deletePkl(id) {
                         </button>
                         <button type="submit" class="px-4 py-2 border border-gray-500 rounded hover:bg-gray-500 hover:text-white transition-colors">
                             Simpan
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Modal for Edit PKL Form -->
-        <div v-if="showEditPklModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div class="bg-background p-6 rounded-lg w-full max-w-md border border-sidebar-border/70">
-                <h3 class="text-lg font-bold mb-4">Edit Data PKL</h3>
-                <form @submit.prevent="submitEditPkl">
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block mb-1">Pilih Industri</label>
-                            <select v-model="editPklForm.industri_id" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-transparent">
-                                <option value="">Pilih Industri</option>
-                                <option v-for="industri in industris.data" :key="industri.id" :value="industri.id">
-                                    {{ industri.nama }}
-                                </option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block mb-1">Pilih Guru Pembimbing</label>
-                            <select v-model="editPklForm.guru_id" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-transparent">
-                                <option value="">Pilih Guru Pembimbing</option>
-                                <option v-for="guru in gurus" :key="guru.id" :value="guru.id">
-                                    {{ guru.name }}
-                                </option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block mb-1">Tanggal Mulai</label>
-                            <input v-model="editPklForm.mulai" type="date" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-transparent">
-                        </div>
-                        <div>
-                            <label class="block mb-1">Tanggal Selesai</label>
-                            <input v-model="editPklForm.selesai" type="date" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-transparent">
-                        </div>
-                    </div>
-                    <div class="mt-4 flex justify-end space-x-2">
-                        <button type="button" @click="showEditPklModal = false" class="px-4 py-2 border border-sidebar-border/70 rounded hover:bg-gray-500 hover:text-white transition-colors">
-                            Batal
-                        </button>
-                        <button type="submit" class="px-4 py-2 border border-gray-500 rounded hover:bg-gray-500 hover:text-white transition-colors">
-                            Update
                         </button>
                     </div>
                 </form>

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\SiswaAuth;
 use App\Http\Controllers\GuruAuth;
+use App\Http\Controllers\SiswaDataController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -11,9 +12,26 @@ Route::get('/', function () {
 
 
 
-Route::get('siswa/dashboard', function () {
-    return Inertia::render('Siswa Dashboard');
-})->middleware(['auth:siswa'])->name('siswa.dashboard');
+// Siswa Dashboard & Data Management Routes
+Route::middleware(['auth:siswa'])->group(function () {
+    Route::get('siswa/dashboard', [SiswaDataController::class, 'dashboard'])->name('siswa.dashboard');
+    
+    // Industri routes
+    Route::post('/industri', [SiswaDataController::class, 'storeIndustri']);
+    Route::put('/industri/{industri}', [SiswaDataController::class, 'updateIndustri']);
+    Route::delete('/industri/{industri}', [SiswaDataController::class, 'deleteIndustri']);
+    
+    // PKL routes
+    Route::post('/pkl', [SiswaDataController::class, 'storePkl']);
+    Route::put('/pkl/{pkl}', [SiswaDataController::class, 'updatePkl'])
+        ->middleware(['auth', 'verified'])
+        ->name('pkl.update');
+    Route::delete('/pkl/{pkl}', [SiswaDataController::class, 'deletePkl']);
+    
+    Route::get('/industris', [SiswaDataController::class, 'getIndustris'])
+        ->middleware(['auth', 'verified'])
+        ->name('industris.index');
+});
 
 Route::get('guru/dashboard', function () {
     return Inertia::render('Guru Dashboard');

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Pkl extends Model
 {
@@ -37,6 +38,6 @@ class Pkl extends Model
      */
     public function guru(): BelongsTo
     {
-        return $this->belongsTo(DataGuru::class, 'guru_id');
+        return $this->belongsTo(Guru::class, 'guru_id');
     }
 }

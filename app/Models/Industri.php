@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Industri extends Model
 {
-    $table->id();
-    $table->string('nama');
-    $table->string('bidang_usaha');           // Bidang usaha industri
-    $table->text('alamat');                   // Alamat industri
-    $table->string('kontak');                 // Nomor kontak
-    $table->string('email')->unique();        =
-    $table->timestamps();
+    protected $table = 'industris';
+    
+    protected $fillable = [
+        'nama',
+        'bidang_usaha',
+        'alamat',
+        'kontak',
+        'email'
+    ];
 }
