@@ -32,4 +32,13 @@ class guruAuth extends Controller
             'email' => 'Email atau password salah',
         ]);
     }
+
+     public function destroy(Request $request)
+    {
+        Auth::guard('guru')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        
+        return redirect('/');
+    }
 }

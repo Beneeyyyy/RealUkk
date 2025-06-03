@@ -232,10 +232,10 @@ function deletePkl(id) {
                         </p>
                         <div class="pt-4 border-t border-sidebar-border/70 mt-4">
                             <button 
-                                @click="logout" 
+                               @click="logout" 
                                 class="w-full border border-red-500 text-red-500 px-4 py-2 rounded hover:bg-red-500 hover:text-white transition-colors">
                                 Logout
-                            </button>
+                            </button n>
                         </div>
                     </div>
                 </div>

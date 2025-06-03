@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\GuruDataController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\SiswaAuth;
-use App\Http\Controllers\GuruAuth;
+use App\Http\Controllers\siswaAuth;
+use App\Http\Controllers\guruAuth;
 use App\Http\Controllers\SiswaDataController;
 
 Route::get('/', function () {
@@ -33,9 +34,11 @@ Route::middleware(['auth:siswa'])->group(function () {
         ->name('industris.index');
 });
 
-Route::get('guru/dashboard', function () {
-    return Inertia::render('Guru Dashboard');
-})->middleware(['auth:guru'])->name('guru.dashboard');
+
+
+Route::middleware(['auth:guru'])->group(function () {
+    Route::get('guru/dashboard', [GuruDataController::class, 'dashboard'])->name('guru.dashboard');
+});
 
 
 

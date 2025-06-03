@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Siswa;
+
 use App\Models\Guru;
 use App\Models\Industri;
 use App\Models\Pkl;
