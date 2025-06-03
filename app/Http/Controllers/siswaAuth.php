@@ -12,7 +12,7 @@ class siswaAuth extends Controller
 {
     public function create()
     {
-        return Inertia::render('Auth/Register');
+         return Inertia::render('Siswa Register');
     }
 
     public function store(Request $request)
@@ -41,12 +41,12 @@ class siswaAuth extends Controller
         $siswa = Siswa::create($data);
         Auth::guard('siswa')->login($siswa);
 
-        return redirect()->route('dashboard');
+        return redirect()->intended('/siswa/dashboard'); // Mengubah redirect untuk memastikan path yang benar
     }
 
     public function login()
     {
-        return Inertia::render('Auth/Login');
+        return Inertia::render('Siswa Login');
     }
 
     public function authenticate(Request $request)
@@ -58,9 +58,7 @@ class siswaAuth extends Controller
 
         if (Auth::guard('siswa')->attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
-            
-            // Redirect ke dashboard setelah login berhasil
-            return redirect()->intended('/dashboard');
+            return redirect()->route('siswa.dashboard'); // Mengubah redirect ke nama route yang benar
         }
 
         return back()->withErrors([
@@ -74,6 +72,6 @@ class siswaAuth extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         
-        return redirect('/Dashboard');
+        return redirect('/'); // Mengubah redirect ke home setelah logout
     }
 }

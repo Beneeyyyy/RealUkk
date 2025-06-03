@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nip')->unique(); // Nomor Induk Pegawai
             $table->enum('gender', ['Laki-laki', 'Perempuan']);
             $table->text('alamat');
-            $table->string('kontakt');
+            $table->string('kontak');
             $table->string('email')->unique();
             $table->string('password'); // Password untuk login
             $table->timestamps();
