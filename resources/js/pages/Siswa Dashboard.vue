@@ -41,6 +41,13 @@ const pklForm = useForm({
     selesai: ''
 });
 
+const editPklForm = useForm({
+    industri_id: '',
+    guru_id: '',
+    mulai: '',
+    selesai: ''
+});
+
 function openEditPklModal(pkl) {
     currentPkl.value = pkl;
     editPklForm.industri_id = pkl.industri_id;
