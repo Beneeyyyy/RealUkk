@@ -5,7 +5,7 @@ import { Head, useForm, router } from '@inertiajs/vue3';
 import { ref, computed, watch } from 'vue';
 import Pagination from '@/components/Pagination.vue';
 
-const props = defineProps(['siswa', 'industris', 'pkl', 'gurus']);
+const props = defineProps(['siswa', 'industris', 'pkl', 'gurus', 'allIndustris']);
 const search = ref('');
 const showModal = ref(false);
 const showPklModal = ref(false);
@@ -384,7 +384,7 @@ function deletePkl(id) {
                             <label class="block mb-1">Pilih Industri</label>
                             <select v-model="editPklForm.industri_id" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-transparent">
                                 <option value="">Pilih Industri</option>
-                                <option v-for="industri in industris.data" :key="industri.id" :value="industri.id">
+                                <option v-for="industri in allIndustris" :key="industri.id" :value="industri.id">
                                     {{ industri.nama }}
                                 </option>
                             </select>

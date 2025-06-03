@@ -15,6 +15,7 @@ class SiswaDataController extends Controller
     {
         $siswa = Auth::guard('siswa')->user();
         $gurus = Guru::all();
+        $allIndustris = Industri::orderBy('nama')->get();
 
         // Get PKL data with relationships and pagination
         $pkl = Pkl::with(['industri', 'guru', 'siswa'])
@@ -35,6 +36,7 @@ class SiswaDataController extends Controller
         return Inertia::render('Siswa Dashboard', [
             'siswa' => $siswa,
             'industris' => $industris,
+            'allIndustris' => $allIndustris,
             'pkl' => $pkl,
             'gurus' => $gurus
         ]);
