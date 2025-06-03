@@ -162,6 +162,15 @@ function deletePkl(id) {
                 <!-- Profile Card Kiri -->
                 <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                     <h2 class="text-xl font-bold mb-4">Profile Siswa</h2>
+                    <div class="flex flex-col items-center mb-4">
+                        <div class="w-32 h-32 rounded-full overflow-hidden mb-3 border-2 border-sidebar-border/70">
+                            <img 
+                                :src="siswa.gambar ? `public/images/siswa/${siswa.gambar}` : '/images/default-avatar.png'"
+                                :alt="siswa.nama"
+                                class="w-full h-full object-cover"
+                            >
+                        </div>
+                    </div>
                     <div class="space-y-2">
                         <p><strong>Nama:</strong> {{ siswa.nama }}</p>
                         <p><strong>NIS:</strong> {{ siswa.nis }}</p>
