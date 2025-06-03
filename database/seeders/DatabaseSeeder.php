@@ -2,22 +2,40 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Guru;
+use App\Models\Siswa;
+use App\Models\Industri;
+use App\Models\Pkl;
+use Faker\Factory as Faker;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
+    public function run()
     {
-        // User::factory(10)->create();
+        $faker = Faker::create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // 1. Guru
+        Guru::factory()->count(10)->create();
+
+        // 4. Industri
+        Industri::factory()->count(10)->create();
+
+        // 3. Siswa (butuh industri dan guru ids)
+       
+
+       Siswa::factory()->count(10)->create();
+
+        // 2. Pkl (butuh siswa id)
+        $siswaIds = Siswa::pluck('id')->toArray();
+         $industriIds = Industri::pluck('id')->toArray();
+        $guruIds = Guru::pluck('id')->toArray();
+
+        Pkl::factory()->count(10)->create([
+            'siswa_id' => $faker->randomElement($siswaIds),
+            'industri_id' => $faker->randomElement($industriIds),
+            'guru_id' => $faker->randomElement($guruIds),
         ]);
     }
 }
