@@ -18,14 +18,20 @@ class SiswaDataController extends Controller
         $allIndustris = Industri::orderBy('nama')->get();
 
         // Get PKL data with relationships and pagination
-       $pkl = Pkl::with(['industri', 'guru', 'siswa'])
-    ->when($request->searchPkl, function ($query, $search) {
-        $query->whereHas('siswa', fn($q) => $q->where('nama', 'like', "%{$search}%"))
-              ->orWhereHas('guru', fn($q) => $q->where('name', 'like', "%{$search}%"))
-              ->orWhereHas('industri', fn($q) => $q->where('nama', 'like', "%{$search}%"));
-    })
-    ->orderByRaw("CASE WHEN siswa_id = ? THEN 1 ELSE 0 END DESC", [$siswa->id])
-    ->paginate(5, ['*'], 'pkl_page');
+       // Get PKL data separately for current student and others
+        $currentStudentPkl = Pkl::with(['industri', 'guru', 'siswa'])
+            ->where('siswa_id', $siswa->id)
+            ->get();
+
+        $otherStudentsPkl = Pkl::with(['industri', 'guru', 'siswa'])
+            ->where('siswa_id', '!=', $siswa->id)
+            ->when($request->searchPkl, function ($query, $search) {
+                $query->whereHas('siswa', fn($q) => $q->where('nama', 'like', "%{$search}%"))
+                      ->orWhereHas('guru', fn($q) => $q->where('name', 'like', "%{$search}%"))
+                      ->orWhereHas('industri', fn($q) => $q->where('nama', 'like', "%{$search}%"));
+            })
+            ->latest()
+            ->paginate(5, ['*'], 'pkl_page');
 
         // Get Industri data with search filter
         $industris = Industri::query()
@@ -42,7 +48,8 @@ class SiswaDataController extends Controller
             'siswa' => $siswa,
             'industris' => $industris,
             'allIndustris' => $allIndustris,
-            'pkl' => $pkl,
+            'pkl' => $otherStudentsPkl,
+            'currentStudentPkl' => $currentStudentPkl,
             'gurus' => $gurus
         ]);
     }

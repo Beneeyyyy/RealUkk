@@ -18,7 +18,7 @@ function logout() {
 
 
 
-const props = defineProps(['siswa', 'industris', 'pkl', 'gurus', 'allIndustris']);
+const props = defineProps(['siswa', 'industris', 'pkl', 'currentStudentPkl', 'gurus', 'allIndustris']);
 const search = ref('');
 const showModal = ref(false);
 const showPklModal = ref(false);
@@ -203,7 +203,7 @@ function deletePkl(id) {
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-screen flex-1 flex-col gap-2 rounded-xl p-2">
             <!-- Profile and Quick Actions Section -->
-            <div class="grid auto-rows-min gap-2 md:grid-cols-3 h-1/3">
+            <div class="grid auto-rows-min gap-2 md:grid-cols-3 h-auto">
                 <!-- Profile Card Kiri -->
                 <div class="p-3 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                     <h2 class="text-lg font-bold mb-2">Profile Siswa</h2>
@@ -224,19 +224,51 @@ function deletePkl(id) {
                     </div>
                 </div>
 
-                <!-- Quick Actions Card -->
-                <div class="p-3 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                    <h2 class="text-lg font-bold mb-2">Quick Actions</h2>
-                    <div class="space-y-2">
-                        <button @click="openModal()" class="w-full border border-gray-500 px-3 py-1.5 rounded hover:bg-gray-500 hover:text-white transition-colors text-sm">
-                            Tambah Data Industri
-                        </button>
-                        <button 
-                            v-if="!siswa.status_pkl"
-                            @click="showPklModal = true" 
-                            class="w-full border border-gray-500 px-3 py-1.5 rounded hover:bg-gray-500 hover:text-white transition-colors text-sm">
-                            Tambah Data PKL
-                        </button>
+                <!-- Quick Actions and Current PKL Info -->
+                <div class="flex flex-col gap-3 row-span-2">
+                    <!-- Quick Actions -->
+                    <div class="p-3 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border flex-1">
+                        <h2 class="text-lg font-bold mb-3">Quick Actions</h2>
+                        <div class="space-y-2">
+                            <button @click="openModal()" class="w-full border border-gray-500 px-3 py-1.5 rounded hover:bg-gray-500 hover:text-white transition-colors text-sm">
+                                Tambah Data Industri
+                            </button>
+                            <button 
+                                v-if="!siswa.status_pkl"
+                                @click="showPklModal = true" 
+                                class="w-full border border-gray-500 px-3 py-1.5 rounded hover:bg-gray-500 hover:text-white transition-colors text-sm">
+                                Tambah Data PKL
+                            </button>
+                        </div>
+
+                        <!-- Current PKL Info -->
+                        <template v-if="siswa.status_pkl && currentStudentPkl?.length">
+                            <div class="mt-6 pt-4 border-t border-sidebar-border/70">
+                                <h3 class="font-semibold mb-3">Data PKL Saya</h3>
+                                <div v-for="p in currentStudentPkl" :key="p.id">
+                                    <div class="bg-gray-900/5 rounded-lg p-3 space-y-2">
+                                        <div class="grid gap-2 text-sm">
+                                            <p><strong>Industri:</strong> {{ p.industri?.nama || '-' }}</p>
+                                            <p><strong>Guru Pembimbing:</strong> {{ p.guru?.name || '-' }}</p>
+                                            <p><strong>Mulai:</strong> {{ p.mulai ? new Date(p.mulai).toLocaleDateString() : '-' }}</p>
+                                            <p><strong>Selesai:</strong> {{ p.selesai ? new Date(p.selesai).toLocaleDateString() : '-' }}</p>
+                                        </div>
+                                        <div class="flex gap-2 pt-2">
+                                            <button 
+                                                @click="openEditPklModal(p)"
+                                                class="flex-1 border border-gray-500 px-2 py-1 rounded hover:bg-gray-500 hover:text-white transition-colors text-xs">
+                                                Edit
+                                            </button>
+                                            <button 
+                                                @click="deletePkl(p.id)" 
+                                                class="flex-1 border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white transition-colors text-xs">
+                                                Hapus
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
                     </div>
                 </div>
 
@@ -257,7 +289,7 @@ function deletePkl(id) {
                                @click="logout" 
                                 class="w-full border border-red-500 text-red-500 px-3 py-1.5 rounded hover:bg-red-500 hover:text-white transition-colors text-sm">
                                 Logout
-                            </button n>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -287,34 +319,21 @@ function deletePkl(id) {
                                     <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Guru Pembimbing</th>
                                     <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Mulai</th>
                                     <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Selesai</th>
-                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="text-sm">
-                                <tr v-for="p in pkl.data" :key="p.id" 
-                                    :class="{
-                                        'border-b border-sidebar-border/70': true,
-                                        'bg-gray-900/5': p.siswa_id === siswa.id
-                                    }">
-                                    <td class="px-4 py-2">{{ p.siswa?.nama }}</td>
-                                    <td class="px-4 py-2">{{ p.industri?.nama }}</td>
-                                    <td class="px-4 py-2">{{ p.guru?.name }}</td>
-                                    <td class="px-4 py-2">{{ new Date(p.mulai).toLocaleDateString() }}</td>
-                                    <td class="px-4 py-2">{{ new Date(p.selesai).toLocaleDateString() }}</td>
-                                    <td class="px-4 py-2">
-                                        <div v-if="p.siswa_id === siswa.id" class="flex space-x-2">
-                                            <button 
-                                                @click="openEditPklModal(p)"
-                                                class="border border-gray-500 px-2 py-0.5 rounded hover:bg-gray-500 hover:text-white transition-colors text-xs">
-                                                Edit
-                                            </button>
-                                            <button 
-                                                @click="deletePkl(p.id)" 
-                                                class="border border-red-500 text-red-500 px-2 py-0.5 rounded hover:bg-red-500 hover:text-white transition-colors text-xs">
-                                                Hapus
-                                            </button>
-                                        </div>
-                                    </td>
+                                <template v-if="pkl?.data">
+                                    <tr v-for="p in pkl.data" :key="p.id" 
+                                        class="border-b border-sidebar-border/70">
+                                        <td class="px-4 py-2">{{ p.siswa?.nama || '-' }}</td>
+                                        <td class="px-4 py-2">{{ p.industri?.nama || '-' }}</td>
+                                        <td class="px-4 py-2">{{ p.guru?.name || '-' }}</td>
+                                        <td class="px-4 py-2">{{ p.mulai ? new Date(p.mulai).toLocaleDateString() : '-' }}</td>
+                                        <td class="px-4 py-2">{{ p.selesai ? new Date(p.selesai).toLocaleDateString() : '-' }}</td>
+                                    </tr>
+                                </template>
+                                <tr v-else>
+                                    <td colspan="5" class="px-4 py-2 text-center text-gray-500">Memuat data PKL...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -386,6 +405,9 @@ function deletePkl(id) {
                 </div>
             </div>
         </div>
+     
+
+        
 
         <!-- Modal for Industri Form -->
         <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
