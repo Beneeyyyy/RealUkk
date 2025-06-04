@@ -162,10 +162,22 @@ function deletePkl(id) {
 <style scoped>
 .pkl-pagination :deep(.pagination-nav) {
     justify-content: flex-start;
+    margin-top: 0.5rem;
+}
+
+.pkl-pagination :deep(.pagination-nav .page-link) {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
 }
 
 .industri-pagination :deep(.pagination-nav) {
     justify-content: flex-start;
+    margin-top: 0.5rem;
+}
+
+.industri-pagination :deep(.pagination-nav .page-link) {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
 }
 
 .pkl-pagination, .industri-pagination {
@@ -179,49 +191,49 @@ function deletePkl(id) {
 
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-            <div class="grid auto-rows-min gap-4 md:grid-cols-3">
+        <div class="flex h-screen flex-1 flex-col gap-2 rounded-xl p-2">
+            <!-- Profile and Quick Actions Section -->
+            <div class="grid auto-rows-min gap-2 md:grid-cols-3 h-1/3">
                 <!-- Profile Card Kiri -->
-                <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                    <h2 class="text-xl font-bold mb-4">Profile Siswa</h2>
-                    <div class="flex flex-col items-center mb-4">
-                        <div class="w-32 h-32 rounded-full overflow-hidden mb-3 border-2 border-sidebar-border/70">
+                <div class="p-3 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+                    <h2 class="text-lg font-bold mb-2">Profile Siswa</h2>
+                    <div class="flex gap-3">
+                        <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-sidebar-border/70">
                             <img 
-                                :src="siswa.gambar ? `/images/siswa/${siswa.gambar}` : '/images/default-avatar.png'"
+                                :src="siswa.gambar ? `/storage/${siswa.gambar}` : '/images/default-avatar.png'"
                                 :alt="siswa.nama"
                                 class="w-full h-full object-cover"
                             >
                         </div>
-                    </div>
-                    <div class="space-y-2">
-                      
-                        <p><strong>Nama:</strong> {{ siswa.nama }}</p>
-                        <p><strong>NIS:</strong> {{ siswa.nis }}</p>
-                        <p><strong>Email:</strong> {{ siswa.email }}</p>
-                        <p><strong>Gender:</strong> {{ siswa.gender }}</p>
+                        <div class="space-y-1 text-sm">
+                            <p><strong>Nama:</strong> {{ siswa.nama }}</p>
+                            <p><strong>NIS:</strong> {{ siswa.nis }}</p>
+                            <p><strong>Email:</strong> {{ siswa.email }}</p>
+                            <p><strong>Gender:</strong> {{ siswa.gender }}</p>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Quick Actions Card -->
-                <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                    <h2 class="text-xl font-bold mb-4">Quick Actions</h2>
+                <div class="p-3 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+                    <h2 class="text-lg font-bold mb-2">Quick Actions</h2>
                     <div class="space-y-2">
-                        <button @click="openModal()" class="w-full border border-gray-500 px-4 py-2 rounded hover:bg-gray-500 hover:text-white transition-colors">
+                        <button @click="openModal()" class="w-full border border-gray-500 px-3 py-1.5 rounded hover:bg-gray-500 hover:text-white transition-colors text-sm">
                             Tambah Data Industri
                         </button>
                         <button 
                             v-if="!siswa.status_pkl"
                             @click="showPklModal = true" 
-                            class="w-full border border-gray-500 px-4 py-2 rounded hover:bg-gray-500 hover:text-white transition-colors">
+                            class="w-full border border-gray-500 px-3 py-1.5 rounded hover:bg-gray-500 hover:text-white transition-colors text-sm">
                             Tambah Data PKL
                         </button>
                     </div>
                 </div>
 
                 <!-- Profile Card Kanan -->
-                <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                    <h2 class="text-xl font-bold mb-4">Info Tambahan</h2>
-                    <div class="space-y-2">
+                <div class="p-3 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+                    <h2 class="text-lg font-bold mb-2">Info Tambahan</h2>
+                    <div class="space-y-1 text-sm">
                         <p><strong>Alamat:</strong> {{ siswa.alamat }}</p>
                         <p><strong>Kontak:</strong> {{ siswa.kontak }}</p>
                         <p>
@@ -230,10 +242,10 @@ function deletePkl(id) {
                                 {{ siswa.status_pkl ? 'Sudah Mendapat PKL' : 'Belum Mendapat PKL' }}
                             </span>
                         </p>
-                        <div class="pt-4 border-t border-sidebar-border/70 mt-4">
+                        <div class="pt-2 border-t border-sidebar-border/70 mt-2">
                             <button 
                                @click="logout" 
-                                class="w-full border border-red-500 text-red-500 px-4 py-2 rounded hover:bg-red-500 hover:text-white transition-colors">
+                                class="w-full border border-red-500 text-red-500 px-3 py-1.5 rounded hover:bg-red-500 hover:text-white transition-colors text-sm">
                                 Logout
                             </button n>
                         </div>
@@ -242,54 +254,53 @@ function deletePkl(id) {
             </div>
 
             <!-- Data Tables Section -->
-            <div class="grid md:grid-cols-2 grid-cols-1 gap-4">
+            <div class="grid md:grid-cols-2 grid-cols-1 gap-2 h-2/3">
                 <!-- PKL Table -->
-                <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border flex flex-col">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold">Data PKL</h2>
-                          <div class="flex space-x-2 items-center">
+                <div class="p-3 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border flex flex-col h-full overflow-hidden">
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="text-lg font-bold">Data PKL</h2>
+                        <div class="flex space-x-2 items-center">
                            <input 
-  type="text" 
-  v-model="searchPkl" 
-  placeholder="Cari PKL..." 
-  class="px-4 py-2 border rounded bg-transparent"
-/>
-
+                              type="text" 
+                              v-model="searchPkl" 
+                              placeholder="Cari PKL..." 
+                              class="px-3 py-1 border rounded bg-transparent text-sm"
+                            />
                         </div>
                     </div>
-                    <div class="overflow-x-auto">
+                    <div class="overflow-auto flex-1">
                         <table class="min-w-full border-collapse border border-sidebar-border/70">
-                            <thead>
+                            <thead class="sticky top-0 bg-background">
                                 <tr>
-                                    <th class="px-6 py-3 text-left border-b border-sidebar-border/70">Nama Siswa</th>
-                                    <th class="px-6 py-3 text-left border-b border-sidebar-border/70">Industri</th>
-                                    <th class="px-6 py-3 text-left border-b border-sidebar-border/70">Guru Pembimbing</th>
-                                    <th class="px-6 py-3 text-left border-b border-sidebar-border/70">Mulai</th>
-                                    <th class="px-6 py-3 text-left border-b border-sidebar-border/70">Selesai</th>
-                                    <th class="px-6 py-3 text-left border-b border-sidebar-border/70">Actions</th>
+                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Nama Siswa</th>
+                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Industri</th>
+                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Guru Pembimbing</th>
+                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Mulai</th>
+                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Selesai</th>
+                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="text-sm">
                                 <tr v-for="p in pkl.data" :key="p.id" 
                                     :class="{
                                         'border-b border-sidebar-border/70': true,
                                         'bg-gray-900/5': p.siswa_id === siswa.id
                                     }">
-                                    <td class="px-6 py-4">{{ p.siswa?.nama }}</td>
-                                    <td class="px-6 py-4">{{ p.industri?.nama }}</td>
-                                    <td class="px-6 py-4">{{ p.guru?.name }}</td>
-                                    <td class="px-6 py-4">{{ new Date(p.mulai).toLocaleDateString() }}</td>
-                                    <td class="px-6 py-4">{{ new Date(p.selesai).toLocaleDateString() }}</td>
-                                    <td class="px-6 py-4">
+                                    <td class="px-4 py-2">{{ p.siswa?.nama }}</td>
+                                    <td class="px-4 py-2">{{ p.industri?.nama }}</td>
+                                    <td class="px-4 py-2">{{ p.guru?.name }}</td>
+                                    <td class="px-4 py-2">{{ new Date(p.mulai).toLocaleDateString() }}</td>
+                                    <td class="px-4 py-2">{{ new Date(p.selesai).toLocaleDateString() }}</td>
+                                    <td class="px-4 py-2">
                                         <div v-if="p.siswa_id === siswa.id" class="flex space-x-2">
                                             <button 
                                                 @click="openEditPklModal(p)"
-                                                class="border border-gray-500 px-2 py-1 rounded hover:bg-gray-500 hover:text-white transition-colors">
+                                                class="border border-gray-500 px-2 py-0.5 rounded hover:bg-gray-500 hover:text-white transition-colors text-xs">
                                                 Edit
                                             </button>
                                             <button 
                                                 @click="deletePkl(p.id)" 
-                                                class="border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white transition-colors">
+                                                class="border border-red-500 text-red-500 px-2 py-0.5 rounded hover:bg-red-500 hover:text-white transition-colors text-xs">
                                                 Hapus
                                             </button>
                                         </div>
@@ -298,8 +309,7 @@ function deletePkl(id) {
                             </tbody>
                         </table>
                     </div>
-                    <!-- Pagination for PKL table -->
-                     <div v-if="pkl.links" class="mt-4 industri-pagination">
+                    <div v-if="pkl.links" class="mt-2 pkl-pagination">
                         <Pagination 
                             :links="pkl.links"
                             :preserve-state="true"
@@ -310,49 +320,52 @@ function deletePkl(id) {
                 </div>
 
                 <!-- Industri Table -->
-                <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border flex flex-col">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold">Data Industri</h2>
+                <div class="p-3 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border flex flex-col h-full overflow-hidden">
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="text-lg font-bold">Data Industri</h2>
                         <div class="flex space-x-2 items-center">
                            <input 
-  type="text" 
-  v-model="searchIndustri" 
-  placeholder="Cari industri..." 
-  class="px-4 py-2 border rounded bg-transparent"
-/>
-
+                              type="text" 
+                              v-model="searchIndustri" 
+                              placeholder="Cari industri..." 
+                              class="px-3 py-1 border rounded bg-transparent text-sm"
+                            />
                         </div>
                     </div>
-                    <div class="overflow-x-auto">
+                    <div class="overflow-auto flex-1">
                         <table class="min-w-full border-collapse border border-sidebar-border/70">
-                            <thead>
+                            <thead class="sticky top-0 bg-background">
                                 <tr>
-                                    <th class="px-6 py-3 text-left border-b border-sidebar-border/70">Nama</th>
-                                    <th class="px-6 py-3 text-left border-b border-sidebar-border/70">Bidang Usaha</th>
-                                    <th class="px-6 py-3 text-left border-b border-sidebar-border/70">Alamat</th>
-                                    <th class="px-6 py-3 text-left border-b border-sidebar-border/70">Kontak</th>
-                                    <th class="px-6 py-3 text-left border-b border-sidebar-border/70">Actions</th>
+                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Nama</th>
+                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Bidang Usaha</th>
+                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Alamat</th>
+                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Kontak</th>
+                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="text-sm">
                                 <tr v-for="industri in industris.data" :key="industri.id" class="border-b border-sidebar-border/70">
-                                    <td class="px-6 py-4">{{ industri.nama }}</td>
-                                    <td class="px-6 py-4">{{ industri.bidang_usaha }}</td>
-                                    <td class="px-6 py-4">{{ industri.alamat }}</td>
-                                    <td class="px-6 py-4">{{ industri.kontak }}</td>
-                                    <td class="px-6 py-4 flex space-x-2">
-                                        <button @click="openModal(industri)" class="border border-gray-500 px-2 py-1 rounded hover:bg-gray-500 hover:text-white transition-colors">
-                                            Edit
-                                        </button>
-                                        <button @click="deleteIndustri(industri.id)" class="border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white transition-colors">
-                                            Delete
-                                        </button>
+                                    <td class="px-4 py-2">{{ industri.nama }}</td>
+                                    <td class="px-4 py-2">{{ industri.bidang_usaha }}</td>
+                                    <td class="px-4 py-2">{{ industri.alamat }}</td>
+                                    <td class="px-4 py-2">{{ industri.kontak }}</td>
+                                    <td class="px-4 py-2">
+                                        <div class="flex space-x-2">
+                                            <button @click="openModal(industri)" 
+                                                class="border border-gray-500 px-2 py-0.5 rounded hover:bg-gray-500 hover:text-white transition-colors text-xs">
+                                                Edit
+                                            </button>
+                                            <button @click="deleteIndustri(industri.id)" 
+                                                class="border border-red-500 text-red-500 px-2 py-0.5 rounded hover:bg-red-500 hover:text-white transition-colors text-xs">
+                                                Delete
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div v-if="industris.links" class="mt-4 industri-pagination">
+                    <div v-if="industris.links" class="mt-2 industri-pagination">
                         <Pagination 
                             :links="industris.links"
                             :preserve-state="true"

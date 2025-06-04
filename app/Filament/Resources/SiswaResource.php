@@ -159,21 +159,7 @@ class SiswaResource extends Resource
     }
 
 
-    protected function mutateFormDataBeforeCreate(array $data): array
-    {
-        $data['password'] = Hash::make($data['password']);
-        return $data;
-    }
-
-    protected function mutateFormDataBeforeSave(array $data): array
-    {
-        if (!empty($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
-        } else {
-            unset($data['password']); // biar gak kosongin password lama
-        }
-
-        return $data;
-    }
+   
+   
 
 }
