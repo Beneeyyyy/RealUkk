@@ -170,244 +170,276 @@ function deletePkl(id) {
 </script>
 
 <style scoped>
-.pkl-pagination :deep(.pagination-nav) {
-    justify-content: flex-start;
-    margin-top: 0.5rem;
-}
-
-.pkl-pagination :deep(.pagination-nav .page-link) {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-}
-
+.pkl-pagination :deep(.pagination-nav),
 .industri-pagination :deep(.pagination-nav) {
-    justify-content: flex-start;
-    margin-top: 0.5rem;
+    display: flex;
+    justify-content: flex-end;
 }
 
+.pkl-pagination :deep(.pagination-nav .page-link),
 .industri-pagination :deep(.pagination-nav .page-link) {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
+    margin-left: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s;
 }
 
-.pkl-pagination, .industri-pagination {
-    width: 100%;
-    overflow-x: auto;
+.pkl-pagination :deep(.pagination-nav .page-link:hover) {
+    background-color: #f9fafb;
+}
+
+.pkl-pagination :deep(.pagination-nav .page-link.active),
+.industri-pagination :deep(.pagination-nav .page-link.active) {
+    background-color: #f3f4f6;
+    font-weight: 500;
 }
 </style>
 
 <template>
     <Head title="Dashboard" />
-
-
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-screen flex-1 flex-col gap-2 rounded-xl p-2">
-            <!-- Profile and Quick Actions Section -->
-            <div class="grid auto-rows-min gap-2 md:grid-cols-3 h-auto">
-                <!-- Profile Card Kiri -->
-                <div class="p-3 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                    <h2 class="text-lg font-bold mb-2">Profile Siswa</h2>
-                    <div class="flex gap-3">
-                        <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-sidebar-border/70">
+        <div class="min-h-screen max-h-screen flex flex-col gap-4 p-4 bg:black">
+            <!-- Top Section: Profile & Actions -->
+            <div class="grid md:grid-cols-3 gap-4">
+                <!-- Profile Card -->
+                <div class="p-4 rounded-xl border border-gray-200 bg-black shadow-sm">
+                    <div class="flex items-start gap-4">
+                        <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-100 flex-shrink-0">
                             <img 
                                 :src="siswa.gambar ? `/storage/${siswa.gambar}` : '/images/default-avatar.png'"
                                 :alt="siswa.nama"
                                 class="w-full h-full object-cover"
                             >
                         </div>
-                        <div class="space-y-1 text-sm">
-                            <p><strong>Nama:</strong> {{ siswa.nama }}</p>
-                            <p><strong>NIS:</strong> {{ siswa.nis }}</p>
-                            <p><strong>Email:</strong> {{ siswa.email }}</p>
-                            <p><strong>Gender:</strong> {{ siswa.gender }}</p>
+                        <div class="flex-1 min-w-0">
+                            <h2 class="text-lg font-bold truncate">{{ siswa.nama }}</h2>
+                            <div class="mt-1 space-y-1 text-sm text-gray-600">
+                                <p class="flex items-center gap-2">
+                                    <span class="font-medium">NIS:</span> 
+                                    <span class="text-gray-900">{{ siswa.nis }}</span>
+                                </p>
+                                <p class="flex items-center gap-2">
+                                    <span class="font-medium">Email:</span>
+                                    <span class="text-gray-900 truncate">{{ siswa.email }}</span>
+                                </p>
+                                <p class="flex items-center gap-2">
+                                    <span class="font-medium">Status PKL:</span>
+                                    <span :class="siswa.status_pkl ? 'bg-black text-white' : 'bg-gray-100 text-gray-700'"
+                                          class="px-2 py-0.5 rounded-full text-xs">
+                                        {{ siswa.status_pkl ? 'Aktif PKL' : 'Belum PKL' }}
+                                    </span>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Quick Actions and Current PKL Info -->
-                <div class="flex flex-col gap-3 row-span-2">
-                    <!-- Quick Actions -->
-                    <div class="p-3 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border flex-1">
-                        <h2 class="text-lg font-bold mb-3">Quick Actions</h2>
-                        <div class="space-y-2">
-                            <button @click="openModal()" class="w-full border border-gray-500 px-3 py-1.5 rounded hover:bg-gray-500 hover:text-white transition-colors text-sm">
-                                Tambah Data Industri
-                            </button>
-                            <button 
-                                v-if="!siswa.status_pkl"
-                                @click="showPklModal = true" 
-                                class="w-full border border-gray-500 px-3 py-1.5 rounded hover:bg-gray-500 hover:text-white transition-colors text-sm">
-                                Tambah Data PKL
-                            </button>
-                        </div>
+                <!-- Quick Actions -->
+                <div class="p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 class="text-lg font-bold mb-3">Quick Actions</h3>
+                    <div class="space-y-2">
+                        <button @click="openModal()" 
+                            class="w-full border border-gray-300 px-4 py-2 rounded-lg hover: hover:border-gray-400 transition-all text-sm font-medium flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                            </svg>
+                            Tambah Data Industri
+                        </button>
+                        <button v-if="!siswa.status_pkl"
+                            @click="showPklModal = true" 
+                            class="w-full bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-all text-sm font-medium flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V8z" clip-rule="evenodd" />
+                            </svg>
+                            Daftar PKL Baru
+                        </button>
+                    </div>
 
-                        <!-- Current PKL Info -->
-                        <template v-if="siswa.status_pkl && currentStudentPkl?.length">
-                            <div class="mt-6 pt-4 border-t border-sidebar-border/70">
-                                <h3 class="font-semibold mb-3">Data PKL Saya</h3>
-                                <div v-for="p in currentStudentPkl" :key="p.id">
-                                    <div class="bg-gray-900/5 rounded-lg p-3 space-y-2">
-                                        <div class="grid gap-2 text-sm">
-                                            <p><strong>Industri:</strong> {{ p.industri?.nama || '-' }}</p>
-                                            <p><strong>Guru Pembimbing:</strong> {{ p.guru?.name || '-' }}</p>
-                                            <p><strong>Mulai:</strong> {{ p.mulai ? new Date(p.mulai).toLocaleDateString() : '-' }}</p>
-                                            <p><strong>Selesai:</strong> {{ p.selesai ? new Date(p.selesai).toLocaleDateString() : '-' }}</p>
-                                        </div>
-                                        <div class="flex gap-2 pt-2">
-                                            <button 
-                                                @click="openEditPklModal(p)"
-                                                class="flex-1 border border-gray-500 px-2 py-1 rounded hover:bg-gray-500 hover:text-white transition-colors text-xs">
-                                                Edit
-                                            </button>
-                                            <button 
-                                                @click="deletePkl(p.id)" 
-                                                class="flex-1 border border-red-500 text-red-500 px-2 py-1 rounded hover:bg-red-500 hover:text-white transition-colors text-xs">
-                                                Hapus
-                                            </button>
-                                        </div>
+                    <!-- Current PKL Info -->
+                    <template v-if="siswa.status_pkl && currentStudentPkl?.length">
+                        <div class="mt-4 pt-4 border-t border-gray-200">
+                            <h3 class="font-medium text-gray-900 mb-3">Status PKL Saat Ini</h3>
+                            <div v-for="p in currentStudentPkl" :key="p.id" 
+                                class="rounded-lg p-3">
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex justify-between items-start">
+                                        <span class="font-medium">Industri:</span>
+                                        <span class="text-right">{{ p.industri?.nama || '-' }}</span>
+                                    </div>
+                                    <div class="flex justify-between items-start">
+                                        <span class="font-medium">Pembimbing:</span>
+                                        <span class="text-right">{{ p.guru?.name || '-' }}</span>
+                                    </div>
+                                    <div class="flex justify-between items-start">
+                                        <span class="font-medium">Periode:</span>
+                                        <span class="text-right">
+                                            {{ p.mulai ? new Date(p.mulai).toLocaleDateString('id-ID', { dateStyle: 'medium' }) : '-' }}
+                                            s/d
+                                            {{ p.selesai ? new Date(p.selesai).toLocaleDateString('id-ID', { dateStyle: 'medium' }) : '-' }}
+                                        </span>
                                     </div>
                                 </div>
+                                <div class="flex gap-2 mt-3 pt-2 border-t border-gray-200">
+                                    <button @click="openEditPklModal(p)"
+                                        class="flex-1  text-white border border-gray-300 px-3 py-1.5 rounded hover:bg-gray-50 transition-colors text-black font-medium">
+                                        Edit Data
+                                    </button>
+                                    <button @click="deletePkl(p.id)"
+                                        class="flex-1 border border-red-500 text-red-500 px-3 py-1.5 rounded hover:bg-red-10 transition-colors text-xs font-medium">
+                                        Hapus Data
+                                    </button>
+                                </div>
                             </div>
-                        </template>
-                    </div>
+                        </div>
+                    </template>
                 </div>
 
-                <!-- Profile Card Kanan -->
-                <div class="p-3 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                    <h2 class="text-lg font-bold mb-2">Info Tambahan</h2>
-                    <div class="space-y-1 text-sm">
-                        <p><strong>Alamat:</strong> {{ siswa.alamat }}</p>
-                        <p><strong>Kontak:</strong> {{ siswa.kontak }}</p>
-                        <p>
-                            <strong>Status PKL:</strong>
-                            <span :class="siswa.status_pkl ? 'text-green-500' : 'text-red-500'">
-                                {{ siswa.status_pkl ? 'Sudah Mendapat PKL' : 'Belum Mendapat PKL' }}
-                            </span>
-                        </p>
-                        <div class="pt-2 border-t border-sidebar-border/70 mt-2">
-                            <button 
-                               @click="logout" 
-                                class="w-full border border-red-500 text-red-500 px-3 py-1.5 rounded hover:bg-red-500 hover:text-white transition-colors text-sm">
-                                Logout
-                            </button>
+                <!-- Additional Info -->
+                <div class="p-4 rounded-xl border border-gray-200  shadow-sm">
+                    <h3 class="text-lg font-bold mb-3">Info Tambahan</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-start gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                            </svg>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-700">Alamat</p>
+                                <p class="text-gray-600 mt-0.5">{{ siswa.alamat || '-' }}</p>
+                            </div>
                         </div>
+                        <div class="flex items-start gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                            </svg>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-700">Kontak</p>
+                                <p class="text-gray-600 mt-0.5">{{ siswa.kontak || '-' }}</p>
+                            </div>
+                        </div>
+                        <button @click="logout" 
+                            class="w-full mt-4 border border-red-500 text-red-500 px-3 py-2 rounded-lg hover:bg-red-50 transition-colors text-sm font-medium">
+                            Logout
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Data Tables Section -->
-            <div class="grid md:grid-cols-2 grid-cols-1 gap-2 h-2/3">
+            <!-- Bottom Section: Tables -->
+            <div class="grid md:grid-cols-2 gap-4 flex-1 min-h-0">
                 <!-- PKL Table -->
-                <div class="p-3 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border flex flex-col h-full overflow-hidden">
-                    <div class="flex justify-between items-center mb-2">
-                        <h2 class="text-lg font-bold">Data PKL</h2>
-                        <div class="flex space-x-2 items-center">
-                           <input 
-                              type="text" 
-                              v-model="searchPkl" 
-                              placeholder="Cari PKL..." 
-                              class="px-3 py-1 border rounded bg-transparent text-sm"
+                <div class="p-4 rounded-xl border border-gray-200  shadow-sm flex flex-col">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold">Data PKL Siswa</h2>
+                        <div class="relative">
+                            <input type="text" 
+                                v-model="searchPkl" 
+                                placeholder="Cari data PKL..." 
+                                class="pl-8 pr-4 py-1.5 border border-gray-200 rounded-lg text-sm w-64 focus:outline-none focus:border-gray-400 transition-colors"
                             />
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-2.5 top-2.5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                            </svg>
                         </div>
                     </div>
-                    <div class="overflow-auto flex-1">
-                        <table class="min-w-full border-collapse border border-sidebar-border/70">
-                            <thead class="sticky top-0 bg-background">
+                    
+                    <div class="flex-1 overflow-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50 sticky top-0">
                                 <tr>
-                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Nama Siswa</th>
-                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Industri</th>
-                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Guru Pembimbing</th>
-                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Mulai</th>
-                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Selesai</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-black uppercase tracking-wider">Siswa</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-black uppercase tracking-wider">Industri</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-black uppercase tracking-wider">Pembimbing</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-black uppercase tracking-wider">Periode</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-sm">
-                                <template v-if="pkl?.data">
-                                    <tr v-for="p in pkl.data" :key="p.id" 
-                                        class="border-b border-sidebar-border/70">
-                                        <td class="px-4 py-2">{{ p.siswa?.nama || '-' }}</td>
-                                        <td class="px-4 py-2">{{ p.industri?.nama || '-' }}</td>
-                                        <td class="px-4 py-2">{{ p.guru?.name || '-' }}</td>
-                                        <td class="px-4 py-2">{{ p.mulai ? new Date(p.mulai).toLocaleDateString() : '-' }}</td>
-                                        <td class="px-4 py-2">{{ p.selesai ? new Date(p.selesai).toLocaleDateString() : '-' }}</td>
+                            <tbody class="divide-y divide-gray-200 ">
+                                <template v-if="pkl?.data?.length">
+                                    <tr v-for="p in pkl.data" :key="p.id" class="text-white hover:bg-gray-50 hover:text-black">
+                                        <td class="px-4 py-2 text-sm">{{ p.siswa?.nama || '-' }}</td>
+                                        <td class="px-4 py-2 text-sm">{{ p.industri?.nama || '-' }}</td>
+                                        <td class="px-4 py-2 text-sm">{{ p.guru?.name || '-' }}</td>
+                                        <td class="px-4 py-2 text-sm whitespace-nowrap">
+                                            {{ new Date(p.mulai).toLocaleDateString('id-ID', { dateStyle: 'medium' }) }}
+                                        </td>
                                     </tr>
                                 </template>
                                 <tr v-else>
-                                    <td colspan="5" class="px-4 py-2 text-center text-gray-500">Memuat data PKL...</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div v-if="pkl.links" class="mt-2 pkl-pagination">
-                        <Pagination 
-                            :links="pkl.links"
-                            :preserve-state="true"
-                            :preserve-scroll="true"
-                            :only="['pkl']"
-                        />
-                    </div>
-                </div>
-
-                <!-- Industri Table -->
-                <div class="p-3 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border flex flex-col h-full overflow-hidden">
-                    <div class="flex justify-between items-center mb-2">
-                        <h2 class="text-lg font-bold">Data Industri</h2>
-                        <div class="flex space-x-2 items-center">
-                           <input 
-                              type="text" 
-                              v-model="searchIndustri" 
-                              placeholder="Cari industri..." 
-                              class="px-3 py-1 border rounded bg-transparent text-sm"
-                            />
-                        </div>
-                    </div>
-                    <div class="overflow-auto flex-1">
-                        <table class="min-w-full border-collapse border border-sidebar-border/70">
-                            <thead class="sticky top-0 bg-background">
-                                <tr>
-                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Nama</th>
-                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Bidang Usaha</th>
-                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Alamat</th>
-                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Kontak</th>
-                                    <th class="px-4 py-2 text-left border-b border-sidebar-border/70 text-sm">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-sm">
-                                <tr v-for="industri in industris.data" :key="industri.id" class="border-b border-sidebar-border/70">
-                                    <td class="px-4 py-2">{{ industri.nama }}</td>
-                                    <td class="px-4 py-2">{{ industri.bidang_usaha }}</td>
-                                    <td class="px-4 py-2">{{ industri.alamat }}</td>
-                                    <td class="px-4 py-2">{{ industri.kontak }}</td>
-                                    <td class="px-4 py-2">
-                                        <div class="flex space-x-2">
-                                            <button @click="openModal(industri)" 
-                                                class="border border-gray-500 px-2 py-0.5 rounded hover:bg-gray-500 hover:text-white transition-colors text-xs">
-                                                Edit
-                                            </button>
-                                            <button @click="deleteIndustri(industri.id)" 
-                                                class="border border-red-500 text-red-500 px-2 py-0.5 rounded hover:bg-red-500 hover:text-white transition-colors text-xs">
-                                                Delete
-                                            </button>
-                                        </div>
+                                    <td colspan="4" class="px-4 py-2 text-sm text-center text-black">
+                                        Belum ada data PKL
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div v-if="industris.links" class="mt-2 industri-pagination">
-                        <Pagination 
-                            :links="industris.links"
-                            :preserve-state="true"
-                            :preserve-scroll="true"
-                            :only="['industris']"
-                        />
+                    
+                    <div v-if="pkl.links" class="mt-4 border-t border-gray-200 pt-4 pkl-pagination">
+                        <Pagination :links="pkl.links" :preserve-state="true" :preserve-scroll="true" :only="['pkl']" />
+                    </div>
+                </div>
+
+                <!-- Industri Table -->
+                <div class="p-4 rounded-xl border border-gray-200  shadow-sm flex flex-col">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold">Data Industri</h2>
+                        <div class="relative">
+                            <input type="text" 
+                                v-model="searchIndustri" 
+                                placeholder="Cari industri..." 
+                                class="pl-8 pr-4 py-1.5 border border-gray-200 rounded-lg text-sm w-64 focus:outline-none focus:border-gray-400 transition-colors"
+                            />
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-2.5 top-2.5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1 overflow-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class=" sticky top-0 bg-white">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-black uppercase tracking-wider">Nama</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-black uppercase tracking-wider">Bidang</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-black uppercase tracking-wider">Kontak</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-black uppercase tracking-wider">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200 ">
+                                <template v-if="industris.data?.length">
+                                    <tr v-for="industri in industris.data" :key="industri.id" class="hover:bg-gray-50">
+                                        <td class="px-4 py-2 text-sm font-medium text-gray-900">{{ industri.nama }}</td>
+                                        <td class="px-4 py-2 text-sm text-gray-600">{{ industri.bidang_usaha }}</td>
+                                        <td class="px-4 py-2 text-sm text-gray-600">{{ industri.kontak }}</td>
+                                        <td class="px-4 py-2 whitespace-nowrap">
+                                            <div class="flex gap-2">
+                                                <button @click="openModal(industri)" 
+                                                    class="text-xs px-2 py-1 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
+                                                    Edit
+                                                </button>
+                                                <button @click="deleteIndustri(industri.id)" 
+                                                    class="text-xs px-2 py-1 rounded-md bg-red-50 text-red-600 hover:bg-red-100 transition-colors">
+                                                    Hapus
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </template>
+                                <tr v-else>
+                                    <td colspan="4" class="px-4 py-2 text-sm text-center text-white">
+                                        Belum ada data industri
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div v-if="industris.links" class="mt-4 border-t border-gray-200 pt-4 industri-pagination">
+                        <Pagination :links="industris.links" :preserve-state="true" :preserve-scroll="true" :only="['industris']" />
                     </div>
                 </div>
             </div>
         </div>
-     
-
-        
 
         <!-- Modal for Industri Form -->
         <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">

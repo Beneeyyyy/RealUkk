@@ -105,8 +105,12 @@ watch(searchPkl, (value) => {
                 <!-- Profile Card -->
                 <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                     <div class="flex flex-col items-center text-center">
-                        <div class="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center mb-4">
-                            <span class="text-2xl">{{ props.gurus.name?.[0]?.toUpperCase() || 'G' }}</span>
+                        <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-200 mb-4 bg-white">
+                            <img 
+                                src="/reading.png" 
+                                alt="Profile Icon"
+                                class="w-full h-full object-cover"
+                            />
                         </div>
                         <h2 class="text-lg font-bold mb-1">{{ props.gurus.name }}</h2>
                         <p class="text-sm mb-4">{{ props.gurus.email }}</p>

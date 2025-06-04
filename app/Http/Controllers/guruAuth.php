@@ -11,7 +11,7 @@ use Inertia\Inertia;
 
 class guruAuth extends Controller
 {
-   public function login(){
+   public function showLogin(){
     return Inertia::render('Guru Login');
    }
 

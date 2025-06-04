@@ -10,12 +10,17 @@ use Inertia\Inertia;
 
 class siswaAuth extends Controller
 {
-    public function create()
+    public function showLogin()
     {
-         return Inertia::render('Siswa Register');
+        return Inertia::render('Siswa Login');
     }
 
-    public function store(Request $request)
+    public function showRegister()
+    {
+        return Inertia::render('Siswa Register');
+    }
+
+    public function register(Request $request)
     {
         $request->validate([
             'nama' => 'required|string|max:255',
@@ -34,7 +39,7 @@ class siswaAuth extends Controller
         if ($request->hasFile('gambar')) {
             $gambar = $request->file('gambar');
             $nama_gambar = time() . '.' . $gambar->getClientOriginalExtension();
-            $gambar->move(public_path('images/siswa'), $nama_gambar);
+            $gambar->move(public_path('siswa'), $nama_gambar);
             $data['gambar'] = $nama_gambar;
         }
 

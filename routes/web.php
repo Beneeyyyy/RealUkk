@@ -11,10 +11,16 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
 
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth:users'])->name('dashboard');
+
 
 
 // Siswa Dashboard & Data Management Routes
 Route::middleware(['auth:siswa'])->group(function () {
+    
+
     Route::get('siswa/dashboard', [SiswaDataController::class, 'dashboard'])->name('siswa.dashboard');
     
     // Industri routes
@@ -44,17 +50,17 @@ Route::middleware(['auth:guru'])->group(function () {
 
 //Auth Routes
 Route::middleware('guest')->group(function () {
-    Route::get('siswa/register', [SiswaAuth::class, 'create'])
+    Route::get('siswa/register', [SiswaAuth::class, 'showRegister'])
         ->name('siswa.register');
     
-    Route::post('siswa/register', [SiswaAuth::class, 'store']);
-    
-    Route::get('siswa/login', [SiswaAuth::class, 'login'])
+    Route::post('siswa/register', [SiswaAuth::class, 'register']);
+
+    Route::get('siswa/login', [SiswaAuth::class, 'showLogin'])
         ->name('siswa.login');
     
     Route::post('siswa/login', [SiswaAuth::class, 'authenticate']);
 
-    Route::get('guru/login', [GuruAuth::class, 'login'])
+    Route::get('guru/login', [GuruAuth::class, 'showLogin'])
         ->name('guru.login');
 
     Route::post('guru/login', [GuruAuth::class, 'authenticate']);

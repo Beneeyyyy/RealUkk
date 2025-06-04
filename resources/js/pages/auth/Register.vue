@@ -7,21 +7,17 @@ import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { LoaderCircle } from 'lucide-vue-next';
+import Password from '../settings/Password.vue';
 
 const form = useForm({
-    nama: '',
-    nis: '',
+    name: '',
     email: '',
     password: '',
     password_confirmation: '',
-    gender: '',
-    alamat: '',
-    kontak: '',
-    gambar: null
 });
 
 const submit = () => {
-    form.post(route('siswa.register'), {
+    form.post(route('register'), {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };
@@ -35,15 +31,11 @@ const submit = () => {
             <div class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="nama">Nama Lengkap</Label>
-                    <Input id="nama" type="text" required autofocus :tabindex="1" v-model="form.nama" placeholder="Nama lengkap" />
-                    <InputError :message="form.errors.nama" />
+                    <Input id="nama" type="text" required autofocus :tabindex="1" v-model="form.name" placeholder="Nama lengkap" />
+                    <InputError :message="form.errors.name" />
                 </div>
 
-                <div class="grid gap-2">
-                    <Label for="nis">NIS</Label>
-                    <Input id="nis" type="text" required :tabindex="2" v-model="form.nis" placeholder="Nomor Induk Siswa" />
-                    <InputError :message="form.errors.nis" />
-                </div>
+              
 
                 <div class="grid gap-2">
                     <Label for="email">Email</Label>
@@ -51,34 +43,9 @@ const submit = () => {
                     <InputError :message="form.errors.email" />
                 </div>
 
-                <div class="grid gap-2">
-                    <Label for="gender">Jenis Kelamin</Label>
-                    <select id="gender" v-model="form.gender" required :tabindex="4" class="rounded-md border">
-                        <option value="">Pilih Jenis Kelamin</option>
-                        <option value="Laki-laki">Laki-laki</option>
-                        <option value="Perempuan">Perempuan</option>
-                    </select>
-                    <InputError :message="form.errors.gender" />
-                </div>
+               
 
-                <div class="grid gap-2">
-                    <Label for="alamat">Alamat</Label>
-                    <textarea id="alamat" v-model="form.alamat" required :tabindex="5" class="rounded-md border" rows="3"></textarea>
-                    <InputError :message="form.errors.alamat" />
-                </div>
-
-                <div class="grid gap-2">
-                    <Label for="kontak">No. Telepon</Label>
-                    <Input id="kontak" type="text" required :tabindex="6" v-model="form.kontak" placeholder="Nomor telepon" />
-                    <InputError :message="form.errors.kontak" />
-                </div>
-
-                <div class="grid gap-2">
-                    <Label for="gambar">Foto</Label>
-                    <Input id="gambar" type="file" accept="image/*" :tabindex="7" @input="form.gambar = $event.target.files[0]" />
-                    <InputError :message="form.errors.gambar" />
-                </div>
-
+            
                 <div class="grid gap-2">
                     <Label for="password">Password</Label>
                     <Input id="password" type="password" required :tabindex="8" v-model="form.password" placeholder="Password" />
@@ -99,7 +66,7 @@ const submit = () => {
 
             <div class="text-center text-sm text-muted-foreground">
                 Sudah punya akun?
-                <TextLink :href="route('siswa.login')" class="underline underline-offset-4" :tabindex="11">Masuk</TextLink>
+                <TextLink :href="route('login')" class="underline underline-offset-4" :tabindex="11">Masuk</TextLink>
             </div>
         </form>
     </AuthBase>
