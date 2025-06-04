@@ -16,6 +16,8 @@ function logout() {
 }
 
 
+
+
 const props = defineProps(['siswa', 'industris', 'pkl', 'gurus', 'allIndustris']);
 const search = ref('');
 const showModal = ref(false);
@@ -118,16 +120,24 @@ function openModal(industri = null) {
 }
 
 function submitIndustri() {
-    const url = editMode.value ? `/industri/${currentIndustri.value.id}` : '/industri';
-    const method = editMode.value ? form.put : form.post;
-
-    method(url, {
-        preserveScroll: true,
-        onSuccess: () => {
-            showModal.value = false;
-            form.reset();
-        }
-    });
+    if (editMode.value) {
+        form.put(`/industri/${currentIndustri.value.id}`, {
+            preserveScroll: true,
+            onSuccess: () => {
+                showModal.value = false;
+                form.reset();
+                editMode.value = false;
+            }
+        });
+    } else {
+        form.post('/industri', {
+            preserveScroll: true,
+            onSuccess: () => {
+                showModal.value = false;
+                form.reset();
+            }
+        });
+    }
 }
 
 function deleteIndustri(id) {
