@@ -31,7 +31,7 @@ import { Button } from '@/components/ui/button';
                         <p class="text-gray-600 mb-6">Masuk sebagai guru pembimbing untuk mengelola dan memantau siswa PKL</p>
                         <div class="mt-4">
                             <Link :href="route('guru.login')" class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                                Masuk sebagai Guru
+                                Masuk sebagai Guru MTK
                             </Link>
                         </div>
                     </div>
