@@ -12,6 +12,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\UploadedFile;
 use Filament\Forms\Components\FileUpload;
@@ -58,7 +59,18 @@ class SiswaResource extends Resource
                         Forms\Components\TextInput::make('kontak')
                             ->label('Kontak')
                             ->tel()
-                            ->required(),
+                            ->prefix('+62') // Tambahkan prefix visual
+                            ->hint('Masukkan nomor tanpa awalan 0. Contoh: 81234567890') // Tampilkan hint di bawah input
+                            ->required()
+                            ->rules(['regex:/^[1-9][0-9]{7,14}$/']) // Validasi: tidak diawali 0, panjang 8-15 digit
+                            ->afterStateHydrated(function (TextInput $component, $state) {
+                                // Hapus prefix +62 saat form dibuka kembali, jika sudah tersimpan dengan itu
+                                $component->state(str_replace('+62', '', $state));
+                            })
+                            ->dehydrateStateUsing(function ($state) {
+                                // Saat disimpan, tambahkan kembali prefix +62
+                                return '+62' . ltrim($state, '0');
+                            }),
 
                         Forms\Components\TextInput::make('email')
                             ->label('Email')
@@ -134,7 +146,7 @@ class SiswaResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-              
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -159,7 +171,7 @@ class SiswaResource extends Resource
     }
 
 
-   
-   
+
+
 
 }
