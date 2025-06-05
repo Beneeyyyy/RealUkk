@@ -17,22 +17,22 @@ class DatabaseSeeder extends Seeder
         $faker = Faker::create();
 
         // 1. Guru
-        Guru::factory()->count(10)->create();
+        Guru::factory()->count(15)->create();
 
         // 4. Industri
-        Industri::factory()->count(10)->create();
+        Industri::factory()->count(15)->create();
 
         // 3. Siswa (butuh industri dan guru ids)
        
 
-       Siswa::factory()->count(10)->create();
+       Siswa::factory()->count(15)->create();
 
         // 2. Pkl (butuh siswa id)
         $siswaIds = Siswa::pluck('id')->toArray();
          $industriIds = Industri::pluck('id')->toArray();
         $guruIds = Guru::pluck('id')->toArray();
 
-        Pkl::factory()->count(10)->create([
+        Pkl::factory()->count(15)->create([
             'siswa_id' => $faker->randomElement($siswaIds),
             'industri_id' => $faker->randomElement($industriIds),
             'guru_id' => $faker->randomElement($guruIds),

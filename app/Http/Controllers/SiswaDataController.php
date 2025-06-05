@@ -17,8 +17,7 @@ class SiswaDataController extends Controller
         $gurus = Guru::all();
         $allIndustris = Industri::orderBy('nama')->get();
 
-        // Get PKL data with relationships and pagination
-       // Get PKL data separately for current student and others
+      
         $currentStudentPkl = Pkl::with(['industri', 'guru', 'siswa'])
             ->where('siswa_id', $siswa->id)
             ->get();
@@ -31,7 +30,7 @@ class SiswaDataController extends Controller
                       ->orWhereHas('industri', fn($q) => $q->where('nama', 'like', "%{$search}%"));
             })
             ->latest()
-            ->paginate(5, ['*'], 'pkl_page');
+            ->paginate(13, ['*'], 'pkl_page');
 
         // Get Industri data with search filter
         $industris = Industri::query()
@@ -42,7 +41,7 @@ class SiswaDataController extends Controller
                 });
             })
             ->latest()
-            ->paginate(5, ['*'], 'industri_page');  // Use separate page parameter
+            ->paginate(12, ['*'], 'industri_page');  // Use separate page parameter
 
         return Inertia::render('Siswa Dashboard', [
             'siswa' => $siswa,

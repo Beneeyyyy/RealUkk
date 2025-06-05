@@ -215,14 +215,14 @@ function deletePkl(id) {
                         </div>
                         <div class="flex-1 min-w-0">
                             <h2 class="text-lg font-bold truncate">{{ siswa.nama }}</h2>
-                            <div class="mt-1 space-y-1 text-sm text-gray-600">
+                            <div class="mt-1 space-y-1 text-sm white">
                                 <p class="flex items-center gap-2">
                                     <span class="font-medium">NIS:</span> 
-                                    <span class="text-gray-900">{{ siswa.nis }}</span>
+                                    <span class="text-white">{{ siswa.nis }}</span>
                                 </p>
                                 <p class="flex items-center gap-2">
                                     <span class="font-medium">Email:</span>
-                                    <span class="text-gray-900 truncate">{{ siswa.email }}</span>
+                                    <span class="text-white truncate">{{ siswa.email }}</span>
                                 </p>
                                 <p class="flex items-center gap-2">
                                     <span class="font-medium">Status PKL:</span>
@@ -305,8 +305,8 @@ function deletePkl(id) {
                                 <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
                             </svg>
                             <div class="flex-1">
-                                <p class="font-medium text-gray-700">Alamat</p>
-                                <p class="text-gray-600 mt-0.5">{{ siswa.alamat || '-' }}</p>
+                                <p class="font-medium text-white">Alamat</p>
+                                <p class="text-white mt-0.5">{{ siswa.alamat || '-' }}</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-2">
@@ -314,8 +314,8 @@ function deletePkl(id) {
                                 <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                             </svg>
                             <div class="flex-1">
-                                <p class="font-medium text-gray-700">Kontak</p>
-                                <p class="text-gray-600 mt-0.5">{{ siswa.kontak || '-' }}</p>
+                                <p class="font-medium text-white">Kontak</p>
+                                <p class="text-white mt-0.5">{{ siswa.kontak || '-' }}</p>
                             </div>
                         </div>
                         <button @click="logout" 
@@ -408,9 +408,9 @@ function deletePkl(id) {
                             <tbody class="divide-y divide-gray-200 ">
                                 <template v-if="industris.data?.length">
                                     <tr v-for="industri in industris.data" :key="industri.id" class="hover:bg-gray-50">
-                                        <td class="px-4 py-2 text-sm font-medium text-gray-900">{{ industri.nama }}</td>
-                                        <td class="px-4 py-2 text-sm text-gray-600">{{ industri.bidang_usaha }}</td>
-                                        <td class="px-4 py-2 text-sm text-gray-600">{{ industri.kontak }}</td>
+                                        <td class="px-4 py-2 text-sm font-medium text-white">{{ industri.nama }}</td>
+                                        <td class="px-4 py-2 text-sm text-white">{{ industri.bidang_usaha }}</td>
+                                        <td class="px-4 py-2 text-sm text-white">{{ industri.kontak }}</td>
                                         <td class="px-4 py-2 whitespace-nowrap">
                                             <div class="flex gap-2">
                                                 <button @click="openModal(industri)" 
@@ -488,7 +488,7 @@ function deletePkl(id) {
                     <div class="space-y-4">
                         <div>
                             <label class="block mb-1">Pilih Industri</label>
-                            <select v-model="pklForm.industri_id" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-transparent">
+                            <select v-model="pklForm.industri_id" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-black ">
                                 <option value="">Pilih Industri</option>
                                 <option v-for="industri in props.allIndustris" :key="industri.id" :value="industri.id">
                                     {{ industri.nama }}
@@ -497,7 +497,7 @@ function deletePkl(id) {
                         </div>
                         <div>
                             <label class="block mb-1">Pilih Guru Pembimbing</label>
-                            <select v-model="pklForm.guru_id" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-transparent">
+                            <select v-model="pklForm.guru_id" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-black">
                                 <option value="">Pilih Guru Pembimbing</option>
                                 <option v-for="guru in gurus" :key="guru.id" :value="guru.id">
                                     {{ guru.name }}
@@ -506,11 +506,11 @@ function deletePkl(id) {
                         </div>
                         <div>
                             <label class="block mb-1">Tanggal Mulai</label>
-                            <input v-model="pklForm.mulai" type="date" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-transparent">
+                            <input v-model="pklForm.mulai" type="date" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-black">
                         </div>
                         <div>
                             <label class="block mb-1">Tanggal Selesai</label>
-                            <input v-model="pklForm.selesai" type="date" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-transparent">
+                            <input v-model="pklForm.selesai" type="date" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-black">
                         </div>
                     </div>
                     <div class="mt-4 flex justify-end space-x-2">
@@ -533,7 +533,7 @@ function deletePkl(id) {
                     <div class="space-y-4">
                         <div>
                             <label class="block mb-1">Pilih Industri</label>
-                            <select v-model="editPklForm.industri_id" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-transparent">
+                            <select v-model="editPklForm.industri_id" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-black">
                                 <option value="">Pilih Industri</option>
                                 <option v-for="industri in props.allIndustris" :key="industri.id" :value="industri.id">
                                     {{ industri.nama }}
@@ -542,7 +542,7 @@ function deletePkl(id) {
                         </div>
                         <div>
                             <label class="block mb-1">Pilih Guru Pembimbing</label>
-                            <select v-model="editPklForm.guru_id" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-transparent">
+                            <select v-model="editPklForm.guru_id" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-black">
                                 <option value="">Pilih Guru Pembimbing</option>
                                 <option v-for="guru in gurus" :key="guru.id" :value="guru.id">
                                     {{ guru.name }}
@@ -551,11 +551,11 @@ function deletePkl(id) {
                         </div>
                         <div>
                             <label class="block mb-1">Tanggal Mulai</label>
-                            <input v-model="editPklForm.mulai" type="date" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-transparent">
+                            <input v-model="editPklForm.mulai" type="date" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-black">
                         </div>
                         <div>
                             <label class="block mb-1">Tanggal Selesai</label>
-                            <input v-model="editPklForm.selesai" type="date" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-transparent">
+                            <input v-model="editPklForm.selesai" type="date" class="w-full px-4 py-2 border border-sidebar-border/70 rounded bg-tblack">
                         </div>
                     </div>
                     <div class="mt-4 flex justify-end space-x-2">

@@ -124,7 +124,7 @@ class SiswaController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Data siswa berhasil dihapus'
+            'message' => 'Data PKL berhasil dihapus'
         ]);
     }
 }

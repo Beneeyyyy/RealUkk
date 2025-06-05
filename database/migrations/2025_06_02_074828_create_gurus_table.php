@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name'); // Nama Guru
             $table->string('nip')->unique(); // Nomor Induk Pegawai
-            $table->enum('gender', ['Laki-laki', 'Perempuan']);
+            $table->string('gender', 10);
             $table->text('alamat');
             $table->string('kontak');
             $table->string('email')->unique();

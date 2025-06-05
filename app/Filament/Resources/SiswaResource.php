@@ -59,16 +59,14 @@ class SiswaResource extends Resource
                         Forms\Components\TextInput::make('kontak')
                             ->label('Kontak')
                             ->tel()
-                            ->prefix('+62') // Tambahkan prefix visual
-                            ->hint('Masukkan nomor tanpa awalan 0. Contoh: 81234567890') // Tampilkan hint di bawah input
+                            ->prefix('+62')
+                            ->hint('Masukkan nomor tanpa awalan 0. Contoh: 81234567890')
                             ->required()
-                            ->rules(['regex:/^[1-9][0-9]{7,14}$/']) // Validasi: tidak diawali 0, panjang 8-15 digit
+                            ->rules(['regex:/^[1-9][0-9]{7,14}$/'])
                             ->afterStateHydrated(function (TextInput $component, $state) {
-                                // Hapus prefix +62 saat form dibuka kembali, jika sudah tersimpan dengan itu
                                 $component->state(str_replace('+62', '', $state));
                             })
                             ->dehydrateStateUsing(function ($state) {
-                                // Saat disimpan, tambahkan kembali prefix +62
                                 return '+62' . ltrim($state, '0');
                             }),
 
@@ -109,7 +107,7 @@ class SiswaResource extends Resource
             ->columns([
                 ImageColumn::make('gambar')
                     ->label('Foto Siswa')
-                    ->disk('public') // ini sesuai dengan storage/app/public
+                    ->disk('public')
                     ->circular(),
 
 
@@ -137,11 +135,13 @@ class SiswaResource extends Resource
                 Tables\Columns\TextColumn::make('alamat')
                     ->label('Alamat'),
 
+                Tables\Columns\BooleanColumn::make('status_pkl')
+                    ->label('Status PKL'),
 
 
             ])
             ->filters([
-                // Tambahkan filter jika perlu
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

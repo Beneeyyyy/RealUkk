@@ -20,10 +20,10 @@ class GuruFactory extends Factory
       return [
             'name' => $this->faker->name(),
             'nip' => $this->faker->unique()->numerify('##########'),
-            'gender' => $this->faker->randomElement(['Laki-laki', 'Perempuan']),
+            'gender' => $this->faker->randomElement(['L', 'P']),
             'alamat' => $this->faker->address(),
             'kontak' => $this->faker->phoneNumber(),
-            'email' => $this->faker->unique()->safeEmail(),
+            'email' => $this->faker->unique()->userName() . '@guru.com',
             'password' => Hash::make('password123'), // default password
         ];
     }

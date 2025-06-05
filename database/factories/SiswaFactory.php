@@ -20,10 +20,10 @@ class SiswaFactory extends Factory
        return [
             'nama' => $this->faker->name(),
             'nis' => $this->faker->unique()->numerify('########'),
-            'gender' => $this->faker->randomElement(['Laki-laki', 'Perempuan']),
+            'gender' => $this->faker->randomElement(['L', 'P']),
             'alamat' => $this->faker->address(),
             'kontak' => $this->faker->phoneNumber(),
-            'email' => $this->faker->unique()->safeEmail(),
+            'email' => $this->faker->unique()->userName() . '@siswa.com',
             'gambar' => 'default.jpg', // bisa ganti sesuai kebutuhan
             'password' => Hash::make('password123'),
             'status_pkl' => $this->default['status_pkl'] ?? false, // default status PKL

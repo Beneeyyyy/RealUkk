@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,7 +14,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->string('nis')->unique();
-            $table->enum('gender', ['Laki-laki', 'Perempuan']);
+            $table->string('gender', 10);
             $table->text('alamat');
             $table->string('kontak');
             $table->string('email')->unique();

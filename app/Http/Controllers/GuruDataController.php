@@ -31,7 +31,7 @@ class GuruDataController extends Controller
                 });
             })
             ->orderByRaw("CASE WHEN guru_id = ? THEN 1 ELSE 0 END DESC", [$gurus->id])
-            ->paginate(5)
+            ->paginate(10)
             ->withQueryString();
 
         return Inertia::render('Guru Dashboard', [

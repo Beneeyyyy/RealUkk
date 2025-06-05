@@ -99,63 +99,63 @@ watch(searchPkl, (value) => {
     <Head title="Dashboard" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
+        <div class="flex h-screen flex-col gap-2 rounded-xl p-2">
             <!-- Profile and Summary Section -->
-            <div class="grid gap-4 md:grid-cols-4">
+            <div class="grid gap-2 md:grid-cols-4">
                 <!-- Profile Card -->
-                <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+                <div class="p-4 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                     <div class="flex flex-col items-center text-center">
-                        <div class="w-20 h-20 rounded-full overflow-hidden border-2 border-gray-200 mb-4 bg-white">
+                        <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-white mb-2 bg-white">
                             <img 
                                 src="/reading.png" 
                                 alt="Profile Icon"
                                 class="w-full h-full object-cover"
                             />
                         </div>
-                        <h2 class="text-lg font-bold mb-1">{{ props.gurus.name }}</h2>
-                        <p class="text-sm mb-4">{{ props.gurus.email }}</p>
+                        <h2 class="text-base font-bold mb-1">{{ props.gurus.name }}</h2>
+                        <p class="text-xs mb-2">{{ props.gurus.email }}</p>
                         <button 
                             @click="logout" 
-                            class="w-full border border-red-500 text-red-500 px-3 py-1.5 rounded hover:bg-red-500 hover:text-white transition-colors text-sm">
+                            class="w-full border border-red-500 text-red-500 px-3 py-1 rounded hover:bg-red-500 hover:text-white transition-colors text-xs">
                             Logout
                         </button>
                     </div>
                 </div>
 
                 <!-- Summary Cards -->
-                <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border flex flex-col justify-center">
-                    <h3 class="text-sm font-semibold mb-2">Total Siswa Bimbingan</h3>
-                    <p class="text-3xl font-bold">{{ totalStudentsSupervised }}</p>
-                    <p class="text-xs mt-2">Jumlah siswa yang Anda bimbing</p>
+                <div class="p-4 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border flex flex-col justify-center">
+                    <h3 class="text-xs font-semibold mb-1">Total Siswa Bimbingan</h3>
+                    <p class="text-2xl font-bold">{{ totalStudentsSupervised }}</p>
+                    <p class="text-xs mt-1">Jumlah siswa yang Anda bimbing</p>
                 </div>
 
-                <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border flex flex-col justify-center">
-                    <h3 class="text-sm font-semibold mb-2">Industri Terkait</h3>
-                    <p class="text-3xl font-bold">{{ uniqueIndustries }}</p>
-                    <p class="text-xs mt-2">Jumlah industri yang terhubung</p>
+                <div class="p-4 rounded-xl border border-sidebar border:white dark:border-sidebar-border flex flex-col justify-center">
+                    <h3 class="text-xs font-semibold mb-1">Industri Terkait</h3>
+                    <p class="text-2xl font-bold">{{ uniqueIndustries }}</p>
+                    <p class="text-xs mt-1">Jumlah industri yang terhubung</p>
                 </div>
 
-                <div class="p-6 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border flex flex-col justify-center">
-                    <h3 class="text-sm font-semibold mb-2">Siswa Aktif PKL</h3>
-                    <p class="text-3xl font-bold">{{ activeStudents }}</p>
-                    <p class="text-xs mt-2">Siswa yang sedang menjalani PKL</p>
+                <div class="p-4 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border flex flex-col justify-center">
+                    <h3 class="text-xs font-semibold mb-1">Siswa Aktif PKL</h3>
+                    <p class="text-2xl font-bold">{{ activeStudents }}</p>
+                    <p class="text-xs mt-1">Siswa yang sedang menjalani PKL</p>
                 </div>
             </div>
 
             <!-- PKL Data Section -->
-            <div class="rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                <div class="p-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold">Data Siswa PKL</h2>
-                        <div class="flex items-center space-x-4">
+            <div class="flex-1 rounded-xl border border-sidebar border-white dark:border-sidebar-border overflow-hidden">
+                <div class="p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold">Data Siswa PKL</h2>
+                        <div class="flex items-center space-x-2">
                             <div class="relative">
                                 <input 
                                     type="text" 
                                     v-model="searchPkl" 
                                     placeholder="Cari siswa atau industri..." 
-                                    class="pl-10 pr-4 py-2 border rounded-lg bg-transparent w-64"
+                                    class="pl-8 pr-4 py-1.5 border rounded-lg bg-transparent w-56 text-sm"
                                 />
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-3 top-2.5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 absolute left-2.5 top-2.5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                                 </svg>
                             </div>
